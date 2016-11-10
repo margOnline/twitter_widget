@@ -1,0 +1,9 @@
+<div class="data-twitter-app">
+  <div class="data-tweets">
+    <% @tweets.each do |tweet| %>
+      <div class="tweet">
+        <%= tweet[:text] %>
+      </div>
+    <% end %>
+  </div>
+</div>
