@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
   def index
-    @tweets = TwitterTimelineHub.new(TwitterClientFactory.new.call).call("margonline")[:tweets]
+    twitter_timeline_hub = TwitterTimelineHub.new(TwitterClientFactory.new.call)
+    @tweets = twitter_timeline_hub.call("margonline")[:tweets]
   end
 
 end

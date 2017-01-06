@@ -1,9 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import createFixture from '../../support/createFixture';
-
-function mountComponent(opts){
-}
+import mountComponent from 'app/twitter/mountComponent';
 
 describe('mountComponent', () => {
   let fixture;
@@ -23,21 +21,21 @@ describe('mountComponent', () => {
     status: 'ok',
     tweets: [
       {
-        created_at: "2016-01-01T00:00:00.000-03:00",
+        created_at: "2016-11-01T00:00:00.000-03:00",
         text: "hello @world",
         mentions: ['world']
       },
       {
-        created_at: "2016-01-01T00:03:40.000-03:00",
+        created_at: "2016-11-01T00:03:40.000-03:00",
         text: "goodbye",
         mentions: []
       },
     ]
   });
 
-  it('renders an initial timeline', () => {
-    server.respondWith('GET', '/twitter_timeline/thiagoraujos',[
-      200, {'Content-Type': 'application/json'}, serverResponse
+  it('renders an initial timeline', (done) => {
+    server.respondWith('GET', '/twitter_timeline/margonline',[
+      200, {'Content-Type': 'application/json'}, serverResponse,
     ]);
 
     mountComponent({containerNode: fixture});
@@ -46,10 +44,12 @@ describe('mountComponent', () => {
 
     setTimeout(() => {
       const tweets = fixture.querySelectorAll('.tweet > p');
-
-      expect(tweets).to.have.length(6);
+      expect(tweets).to.have.length(2);
       expect(tweets[0].textContent).to.equal('hello @world');
       expect(tweets[1].textContent).to.equal('goodbye');
+
+      done();
+
     }, 50);
   });
 });

@@ -19,6 +19,7 @@ module.exports = function(config) {
     basePath: '.',
     files: [
       // avoids running tests twice when on watch mode
+      'node_modules/babel-polyfill/dist/polyfill.js',
       { pattern: webpackEntryFile, watched: false, included: true, served: true }
     ],
     preprocessors: karmaPreprocessors,
