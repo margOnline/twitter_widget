@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import parseTweetMentions from 'app/twitter/parseTweetMentions';
 
-describe.only('parseTweetMentions', () => {
+describe('parseTweetMentions', () => {
   context('with empty tweet text and no mentions', () => {
     it('renders an empty string', () => {
       const html = parseTweetMentions('', []);

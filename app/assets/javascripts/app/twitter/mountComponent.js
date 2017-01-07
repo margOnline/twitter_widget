@@ -8,7 +8,7 @@ export default function mountComponent(opts){
   function renderTweets(response) {
     const html = response
       .tweets
-      .map(tweet => parseOneTweet);
+      .map(tweet => parseOneTweet)
       .map(tweet => renderOneTweet(tweet));
 
     containerNode.innerHTML = html;    
