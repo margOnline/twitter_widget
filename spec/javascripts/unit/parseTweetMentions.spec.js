@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import parseTweetMentions from 'app/twitter/parseTweetMentions';
 
 describe('parseTweetMentions', () => {
-  context('with empty tweet text and no mentions', () => {
-    it('renders an empty string', () => {
-      const html = parseTweetMentions('', []);
+  context('with no mentions', () => {
+    it('returns an empty string', () => {
+      const html = parseTweetMentions({ text: '', mentions: [] });
 
       expect(html).to.equal('');
     });
@@ -12,47 +12,51 @@ describe('parseTweetMentions', () => {
 
   context('when having one mention', () => {
     it('transforms the mention into an anchor tag', () => {
-      const text = 'Hey @banksy! How goes it?';
-      const mentions = ['banksy'];
-      const html = parseTweetMentions(text, mentions);
+      const text = 'Hey @dude! How are you doing?';
+      const mentions = ['dude'];
+
+      const html = parseTweetMentions({ text, mentions });
 
       expect(html).to.equal(
-        'Hey <a href="#" data-js-mention>@banksy</a>! How goes it?'
+        'Hey <a href="#" data-js-mention>@dude</a>! How are you doing?'
       );
     });
   });
 
   context('when having two mentions', () => {
-    it('transforms the mention into an anchor tag', () => {
-      const text = 'Hey @banksy! Whens the exhibition @tateModern?';
-      const mentions = ['banksy', 'tateModern'];
-      const html = parseTweetMentions(text, mentions);
+    it('transforms all mentions into anchor tags', () => {
+      const text = 'Released by @dude under @yow supervision';
+      const mentions = ['dude', 'yow'];
+
+      const html = parseTweetMentions({ text, mentions });
 
       expect(html).to.equal(
-        'Hey <a href="#" data-js-mention>@banksy</a>! ' + 
-        'Whens the exhibition <a href="#" data-js-mention>@tateModern</a>?'
+        'Released by <a href="#" data-js-mention>@dude</a> ' +
+        'under <a href="#" data-js-mention>@yow</a> supervision'
       );
     });
   });
 
-  context('when having two mentions which are the same', () => {
+  context('when having the same mention twice', () => {
     it('transforms both mentions into the same anchor tag', () => {
-      const text = 'Yo @banksy! Watch out @banksy!';
-      const mentions = ['banksy', 'tate'];
-      const html = parseTweetMentions(text, mentions);
+      const text = '@dude Watch out, @dude!';
+      const mentions = ['dude'];
+
+      const html = parseTweetMentions({ text, mentions });
 
       expect(html).to.equal(
-        'Yo <a href="#" data-js-mention>@banksy</a>! ' + 
-        'Watch out <a href="#" data-js-mention>@banksy</a>!'
+        '<a href="#" data-js-mention>@dude</a> Watch out, ' +
+        '<a href="#" data-js-mention>@dude</a>!'
       );
     });
   });
 
-  context('when a mention is surrounded by non whitespace chars', () => {
+  context('when a mention is surrounded by non whitespace chars on the left', () => {
     it('is not parsed as a mention', () => {
       const text = 'Email @dude at chief@dudecooking.com';
       const mentions = ['dude'];
-      const html = parseTweetMentions(text, mentions);
+
+      const html = parseTweetMentions({ text, mentions });
 
       expect(html).to.equal(
         'Email <a href="#" data-js-mention>@dude</a> at chief@dudecooking.com'
@@ -60,17 +64,17 @@ describe('parseTweetMentions', () => {
     });
   });
 
-  context('when a mention is surronded by non whitespace chars on the right', () =>{
+  context('when a mention is surrounded by non whitespace chars on the right', () => {
     it('is not parsed as a mention', () => {
       const text = '@dude "@prefix@dude" is not a valid ivar in Ruby';
       const mentions = ['dude'];
-      const html = parseTweetMentions({text, mentions});
+
+      const html = parseTweetMentions({ text, mentions });
 
       expect(html).to.equal(
-        '<a href="#"" data-js-mention>@dude</a> ' +
-        '"@prefix@dude" is not a valid ivar in ruby'
+        '<a href="#" data-js-mention>@dude</a> ' +
+        '"@prefix@dude" is not a valid ivar in Ruby'
       );
     });
   });
-
 });
