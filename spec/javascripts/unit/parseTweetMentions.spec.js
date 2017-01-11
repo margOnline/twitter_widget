@@ -24,13 +24,13 @@ describe('parseTweetMentions', () => {
 
   context('when having two mentions', () => {
     it('transforms the mention into an anchor tag', () => {
-      const text = 'Hey @banksy! Whens the exhibition @tate?';
-      const mentions = ['banksy', 'tate'];
+      const text = 'Hey @banksy! Whens the exhibition @tateModern?';
+      const mentions = ['banksy', 'tateModern'];
       const html = parseTweetMentions(text, mentions);
 
       expect(html).to.equal(
         'Hey <a href="#" data-js-mention>@banksy</a>! ' + 
-        'Whens the exhibition <a href="#" data-js-mention>@tate</a>?'
+        'Whens the exhibition <a href="#" data-js-mention>@tateModern</a>?'
       );
     });
   });
@@ -56,6 +56,19 @@ describe('parseTweetMentions', () => {
 
       expect(html).to.equal(
         'Email <a href="#" data-js-mention>@dude</a> at chief@dudecooking.com'
+      );
+    });
+  });
+
+  context('when a mention is surronded by non whitespace chars on the right', () =>{
+    it('is not parsed as a mention', () => {
+      const text = '@dude "@prefix@dude" is not a valid ivar in Ruby';
+      const mentions = ['dude'];
+      const html = parseTweetMentions({text, mentions});
+
+      expect(html).to.equal(
+        '<a href="#"" data-js-mention>@dude</a> ' +
+        '"@prefix@dude" is not a valid ivar in ruby'
       );
     });
   });
